@@ -1,6 +1,9 @@
 package br.com.strack.springboot_study.services;
 
+import br.com.strack.springboot_study.dtos.PersonDTO;
 import br.com.strack.springboot_study.exceptions.ResourceNotFoundException;
+import static br.com.strack.springboot_study.mapper.ObjectMapper.parseObjectsList;
+import static br.com.strack.springboot_study.mapper.ObjectMapper.parseObject;
 import br.com.strack.springboot_study.model.Person;
 import br.com.strack.springboot_study.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,9 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    private Person mockPerson(int i) {
+    private PersonDTO mockPerson(int i) {
 
-        Person person = new Person();
+        PersonDTO person = new PersonDTO();
         person.setId(counter.incrementAndGet());
         person.setFirstName("Gabriel" + i);
         person.setLastName("Strack" + i);
@@ -30,29 +33,32 @@ public class PersonServices {
         return person;
     }
 
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
         logger.info("finding all people!");
-        return repository.findAll();
+        return parseObjectsList(repository.findAll(), PersonDTO.class);
     }
 
-    public Person findById(Long id) {
+    public PersonDTO findById(Long id) {
         logger.info("finding one person!");
-        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No data for this ID!"));
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No data for this ID!"));
+        return parseObject(entity, PersonDTO.class);
     }
 
-    public Person create(Person person) {
+    public PersonDTO create(PersonDTO person) {
         logger.info("creating one person!");
-        return repository.save(person);
+        var entity = parseObject(person, Person.class);
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person) {
+    public PersonDTO update(PersonDTO person) {
         logger.info("updating one person!");
         Person entity = repository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundException("No data for this ID!"));
         entity.setFirstName(person.getFirstName());
         entity.setLastName(person.getLastName());
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
-        return repository.save(person);
+
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id) {
