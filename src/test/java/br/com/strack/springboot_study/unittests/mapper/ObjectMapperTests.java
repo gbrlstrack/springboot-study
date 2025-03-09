@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import br.com.strack.springboot_study.dtos.PersonDTO;
+import br.com.strack.springboot_study.dtos.v1.PersonDTO;
 import br.com.strack.springboot_study.unittests.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ public class ObjectMapperTests {
 
     @Test
     public void parseEntityToDTOTest() {
-        br.com.strack.springboot_study.dtos.PersonDTO output = parseObject(inputObject.mockEntity(), PersonDTO.class);
+        PersonDTO output = parseObject(inputObject.mockEntity(), PersonDTO.class);
         assertEquals(Long.valueOf(0L), output.getId());
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());

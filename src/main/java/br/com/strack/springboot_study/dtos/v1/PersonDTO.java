@@ -1,4 +1,4 @@
-package br.com.strack.springboot_study.dtos;
+package br.com.strack.springboot_study.dtos.v1;
 
 
 import java.io.Serial;

@@ -1,9 +1,13 @@
 package br.com.strack.springboot_study.services;
 
-import br.com.strack.springboot_study.dtos.PersonDTO;
+import br.com.strack.springboot_study.dtos.v1.PersonDTO;
+import br.com.strack.springboot_study.dtos.v2.PersonDTOV2;
 import br.com.strack.springboot_study.exceptions.ResourceNotFoundException;
+
 import static br.com.strack.springboot_study.mapper.ObjectMapper.parseObjectsList;
 import static br.com.strack.springboot_study.mapper.ObjectMapper.parseObject;
+
+import br.com.strack.springboot_study.mapper.custom.PersonMapper;
 import br.com.strack.springboot_study.model.Person;
 import br.com.strack.springboot_study.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,16 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service
+
 public class PersonServices {
 
     private final AtomicLong counter = new AtomicLong();
     private final Logger logger = Logger.getLogger(PersonServices.class.getName());
     @Autowired
     PersonRepository repository;
+
+    @Autowired
+    PersonMapper converter;
 
     private PersonDTO mockPerson(int i) {
 
@@ -48,6 +56,12 @@ public class PersonServices {
         logger.info("creating one person!");
         var entity = parseObject(person, Person.class);
         return parseObject(repository.save(entity), PersonDTO.class);
+    }
+
+    public PersonDTOV2 createV2(PersonDTOV2 person) {
+        logger.info("creating one person!");
+        var entity = converter.convertDTOToEntity(person);
+        return converter.convertEntityToDTO(repository.save(entity));
     }
 
     public PersonDTO update(PersonDTO person) {

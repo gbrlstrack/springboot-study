@@ -3,7 +3,7 @@ package br.com.strack.springboot_study.unittests.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.strack.springboot_study.dtos.PersonDTO;
+import br.com.strack.springboot_study.dtos.v1.PersonDTO;
 import br.com.strack.springboot_study.model.Person;
 
 public class MockPerson {
